@@ -1,0 +1,7 @@
+*.o
+*.orig
+*.rej
+dmenu
+dmenu-*.tar.gz
+stest
+config.h
