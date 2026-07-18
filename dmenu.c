@@ -15,6 +15,7 @@
 #include <X11/extensions/Xinerama.h>
 #endif
 #include <X11/Xft/Xft.h>
+#include <X11/Xresource.h>
 
 #include "drw.h"
 #include "util.h"
@@ -728,6 +729,36 @@ usage(void)
 	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
 }
 
+static void
+readxresources(void)
+{
+	XrmDatabase xdb;
+	char *xrm, *type;
+	XrmValue xval;
+
+	XrmInitialize();
+	if (!(xrm = XResourceManagerString(dpy)))
+		return;
+	xdb = XrmGetStringDatabase(xrm);
+
+	if (XrmGetResource(xdb, "dmenu.font", "dmenu.Font", &type, &xval))
+		fonts[0] = strdup(xval.addr);
+	if (XrmGetResource(xdb, "dmenu.normbg", "dmenu.Normbg", &type, &xval))
+		colors[SchemeNorm][ColBg] = strdup(xval.addr);
+	if (XrmGetResource(xdb, "dmenu.normfg", "dmenu.Normfg", &type, &xval))
+		colors[SchemeNorm][ColFg] = strdup(xval.addr);
+	if (XrmGetResource(xdb, "dmenu.selbg", "dmenu.Selbg", &type, &xval))
+		colors[SchemeSel][ColBg] = strdup(xval.addr);
+	if (XrmGetResource(xdb, "dmenu.selfg", "dmenu.Selfg", &type, &xval))
+		colors[SchemeSel][ColFg] = strdup(xval.addr);
+	if (XrmGetResource(xdb, "dmenu.outbg", "dmenu.Outbg", &type, &xval))
+		colors[SchemeOut][ColBg] = strdup(xval.addr);
+	if (XrmGetResource(xdb, "dmenu.outfg", "dmenu.Outfg", &type, &xval))
+		colors[SchemeOut][ColFg] = strdup(xval.addr);
+
+	XrmDestroyDatabase(xdb);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -782,6 +813,7 @@ main(int argc, char *argv[])
 		die("cannot open display");
 	screen = DefaultScreen(dpy);
 	root = RootWindow(dpy, screen);
+	readxresources();
 	if (!embed || !(parentwin = strtol(embed, NULL, 0)))
 		parentwin = root;
 	if (!XGetWindowAttributes(dpy, parentwin, &wa))

@@ -1,0 +1,82 @@
+# E-Paper theme + Xresources live light/dark switching
+# Generated 2026-07-17 — source diff (git) + config.h vs config.def.h
+# ============================================================
+diff --git a/dmenu.c b/dmenu.c
+index 983ec51..60def26 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -15,6 +15,7 @@
+ #include <X11/extensions/Xinerama.h>
+ #endif
+ #include <X11/Xft/Xft.h>
++#include <X11/Xresource.h>
+ 
+ #include "drw.h"
+ #include "util.h"
+@@ -728,6 +729,36 @@ usage(void)
+ 	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
+ }
+ 
++static void
++readxresources(void)
++{
++	XrmDatabase xdb;
++	char *xrm, *type;
++	XrmValue xval;
++
++	XrmInitialize();
++	if (!(xrm = XResourceManagerString(dpy)))
++		return;
++	xdb = XrmGetStringDatabase(xrm);
++
++	if (XrmGetResource(xdb, "dmenu.font", "dmenu.Font", &type, &xval))
++		fonts[0] = strdup(xval.addr);
++	if (XrmGetResource(xdb, "dmenu.normbg", "dmenu.Normbg", &type, &xval))
++		colors[SchemeNorm][ColBg] = strdup(xval.addr);
++	if (XrmGetResource(xdb, "dmenu.normfg", "dmenu.Normfg", &type, &xval))
++		colors[SchemeNorm][ColFg] = strdup(xval.addr);
++	if (XrmGetResource(xdb, "dmenu.selbg", "dmenu.Selbg", &type, &xval))
++		colors[SchemeSel][ColBg] = strdup(xval.addr);
++	if (XrmGetResource(xdb, "dmenu.selfg", "dmenu.Selfg", &type, &xval))
++		colors[SchemeSel][ColFg] = strdup(xval.addr);
++	if (XrmGetResource(xdb, "dmenu.outbg", "dmenu.Outbg", &type, &xval))
++		colors[SchemeOut][ColBg] = strdup(xval.addr);
++	if (XrmGetResource(xdb, "dmenu.outfg", "dmenu.Outfg", &type, &xval))
++		colors[SchemeOut][ColFg] = strdup(xval.addr);
++
++	XrmDestroyDatabase(xdb);
++}
++
+ int
+ main(int argc, char *argv[])
+ {
+@@ -782,6 +813,7 @@ main(int argc, char *argv[])
+ 		die("cannot open display");
+ 	screen = DefaultScreen(dpy);
+ 	root = RootWindow(dpy, screen);
++	readxresources();
+ 	if (!embed || !(parentwin = strtol(embed, NULL, 0)))
+ 		parentwin = root;
+ 	if (!XGetWindowAttributes(dpy, parentwin, &wa))
+
+# --- config.h (vs config.def.h) ---
+--- /home/ph/.local/src/dmenu/config.def.h	2026-06-19 14:00:36.111764109 +0200
++++ /home/ph/.local/src/dmenu/config.h	2026-07-17 22:42:40.270201180 +0200
+@@ -5,11 +5,13 @@
+ /* -fn option overrides fonts[0]; default X11 font or font set */
+ static const char *fonts[] 	    = { "Noto Sans Mono:size=13", "Noto Color Emoji:pixelsize=15:antialias=true:autohint=true", };
+ static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
++/* E-Paper / Mudita Mindful Design — warm monochrome on paper.
++ * Selection is an inverted ink bar (highest contrast on e-ink). */
+ static const char *colors[SchemeLast][2] = {
+-	/*     fg         bg       */
+-	[SchemeNorm] = { "#bbbbbb", "#222222" },
+-	[SchemeSel] = { "#eeeeee", "#005577" },
+-	[SchemeOut] = { "#000000", "#00ffff" },
++	/*                fg         bg       */
++	[SchemeNorm] = { "#26241f", "#eae7de" }, /* ink on paper       */
++	[SchemeSel]  = { "#eae7de", "#26241f" }, /* paper on ink (bar) */
++	[SchemeOut]  = { "#eae7de", "#6e6455" }, /* selected output    */
+ };
+ /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
+ static unsigned int lines      = 0;
