@@ -12,13 +12,13 @@ static const char *fonts[] 	    = {
 	"Noto Color Emoji:pixelsize=15:antialias=true:autohint=true",
 };
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
-/* E-Paper / Mudita Mindful Design — warm monochrome on paper.
- * Selection is an inverted ink bar (highest contrast on e-ink). */
+/* Default dmenu gray + blue (matches dwm). Values here are the compiled-in
+ * fallback; dmenu.* Xresources override them at startup. */
 static const char *colors[SchemeLast][2] = {
 	/*                fg         bg       */
-	[SchemeNorm] = { "#26241f", "#eae7de" }, /* ink on paper       */
-	[SchemeSel]  = { "#eae7de", "#26241f" }, /* paper on ink (bar) */
-	[SchemeOut]  = { "#eae7de", "#6e6455" }, /* selected output    */
+	[SchemeNorm] = { "#bbbbbb", "#222222" }, /* gray3 on gray1     */
+	[SchemeSel]  = { "#eeeeee", "#005577" }, /* gray4 on blue      */
+	[SchemeOut]  = { "#000000", "#00ffff" }, /* selected output    */
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
