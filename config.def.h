@@ -12,8 +12,8 @@ static const char *fonts[] 	    = {
 	"Noto Color Emoji:pixelsize=15:antialias=true:autohint=true",
 };
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
-/* Default dmenu gray + blue (matches dwm). Values here are the compiled-in
- * fallback; dmenu.* Xresources override them at startup. */
+/* Standard dmenu gray + blue (fixed; matches dwm, not the st palette).
+ * Optional dmenu.* Xresources override these; unset -> these values win. */
 static const char *colors[SchemeLast][2] = {
 	/*                fg         bg       */
 	[SchemeNorm] = { "#bbbbbb", "#222222" }, /* gray3 on gray1     */

@@ -741,6 +741,8 @@ readxresources(void)
 		return;
 	xdb = XrmGetStringDatabase(xrm);
 
+	/* dmenu keeps its own fixed gray+blue (like Luke's shipped default). These
+	 * dmenu.* resources are optional overrides; unset -> the hardcoded values win. */
 	if (XrmGetResource(xdb, "dmenu.font", "dmenu.Font", &type, &xval))
 		fonts[0] = strdup(xval.addr);
 	if (XrmGetResource(xdb, "dmenu.normbg", "dmenu.Normbg", &type, &xval))
