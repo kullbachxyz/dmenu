@@ -3,8 +3,8 @@
 
 static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom     */
 /* -fn option overrides fonts[0]; default X11 font or font set */
-/* MMD: same monospace as dwm bar / st intent (IBM Plex Mono). Iosevka Nerd Font
- * MUST come before Noto Color Emoji, else emoji grabs the Nerd PUA glyphs first. */
+/* Same monospace as dwm bar / st (IBM Plex Mono). Iosevka Nerd Font MUST
+ * come before Noto Color Emoji, else emoji grabs the Nerd PUA glyphs first. */
 static const char *fonts[] 	    = {
 	"IBM Plex Mono:size=13",
 	"Iosevka Nerd Font:size=13",
